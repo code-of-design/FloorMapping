@@ -11,7 +11,7 @@ PGraphics offscreen; // 投影するグラフィクス
 float floor_width; // 床の幅.
 float floor_height; // 床の高さ.
 int floor_num = 9; // 床の数.
-int[] floor_state; // 床の状態.
+int[] floor_state = new int[floor_num*6]; // 床の状態.
 String floor_state_str; // 床の状態文字列.
 color floor_color; // 床の色値.
 color text_color; // テキストの色値.
@@ -43,14 +43,25 @@ void draw() {
   Client c = server.available(); // クライアントを取得する.
   if(c != null){
     floor_state_str = c.readString(); // クライアントの送信文字列.
-    // println("Str: "+floor_state_str); // 床の状態文字列.
-    // floor_state = int(split(floor_state_str, ","));
+    // println(floor_state_str); // 床の状態文字列.
+    floor_state = int(split(floor_state_str, ","));
+    println(floor_state);
+
+    /*
     for(int i=0; i<floor_num; i++){
-      floor_state[i] = int(floor_state_str.charAt(i+1)); // 床の状態を取得する.
+      // floor_state[i] = int(floor_state_str.charAt(i)); // 床の状態を取得する.
+
+      // ASCII文字コード.
+      // 0: 48
+      // 1: 49
+
+      floor_state[i] = floor_state_str.charAt(i);
+      println(floor_state_str.charAt(i));
     }
+    */
   }
 
-  println(floor_state); // 床の状態を表示する.
+  // println(floor_state); // 床の状態を表示する.
 
   // プロジェクションマッピングを開始する.
   offscreen.beginDraw();
@@ -87,12 +98,10 @@ void draw() {
   offscreen.endDraw(); // プロジェクションマッピングを終了する.
 
   // floor_state, floor_state_strをリフレッシュする.
-  /*
   for(int i=0; i<floor_num; i++){
     floor_state[i] = 0;
   }
   floor_state_str = "";
-  */
 
   // スクリーンに投射する.
   background(0);
