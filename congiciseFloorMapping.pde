@@ -22,7 +22,7 @@ void setup() {
   println("StartServerAtAddress: " + server.ip());
 
   size(displayWidth, displayHeight, P3D);
-  frameRate(30); // Kinectのフレームレート.
+  frameRate(30/2); // Kinectのフレームレート.
 
   // Keystoneを初期化する.
   ks = new Keystone(this);
@@ -46,6 +46,7 @@ void draw() {
     // println(floor_state_str); // 床の状態文字列.
     floor_state = int(split(floor_state_str, ","));
     println(floor_state);
+    println("- - - - - - - - - -");
 
     /*
     for(int i=0; i<floor_num; i++){
@@ -63,11 +64,26 @@ void draw() {
 
   // println(floor_state); // 床の状態を表示する.
 
+  // 床を描画する.
+  drawFloor();
+
+  // floor_state, floor_state_strをリフレッシュする.
+  for(int i=0; i<floor_num; i++){
+    floor_state[i] = 0;
+  }
+  floor_state_str = "";
+
+  // スクリーンに投射する.
+  background(0);
+  surface.render(offscreen);
+}
+
+// 床を描画する.
+void drawFloor(){
   // プロジェクションマッピングを開始する.
   offscreen.beginDraw();
   offscreen.translate(width, height); // 表示を回転する.
   offscreen.rotate(PI);
-
   // 床を描画する
   for(int y=0; y<3; y++){
     for(int x=0; x<3; x++){
@@ -96,16 +112,6 @@ void draw() {
     }
   }
   offscreen.endDraw(); // プロジェクションマッピングを終了する.
-
-  // floor_state, floor_state_strをリフレッシュする.
-  for(int i=0; i<floor_num; i++){
-    floor_state[i] = 0;
-  }
-  floor_state_str = "";
-
-  // スクリーンに投射する.
-  background(0);
-  surface.render(offscreen);
 }
 
 // キャリブレーションのキー入力.
